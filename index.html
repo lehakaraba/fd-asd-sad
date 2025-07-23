@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Розіграші NFT</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 2rem; }
+    button { font-size: 1.2rem; padding: 1rem 2rem; margin-top: 1rem; }
+  </style>
+</head>
+<body>
+  <h1>🎁 Участь у розіграшах NFT</h1>
+  <p>Вартість участі — 2 зірки ⭐</p>
+  <button onclick="joinGiveaway()">Взяти участь</button>
+
+  <script>
+    async function joinGiveaway() {
+      const tg = window.Telegram.WebApp;
+      const user = tg.initDataUnsafe.user;
+
+      const res = await fetch("http://localhost:8000/join", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: user.id })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        alert(`✅ Участь підтверджено!\nЗалишок зірок: ${data.remaining_stars}\nРозіграш: ${data.giveaway}`);
+      } else {
+        const err = await res.json();
+        alert("❌ Помилка: " + err.detail);
+      }
+    }
+  </script>
+</body>
+</html>
